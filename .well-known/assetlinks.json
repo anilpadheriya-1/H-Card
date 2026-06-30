@@ -1,8 +1,1 @@
-[{
-  "relation": ["delegate_permission/common.handle_all_urls"],
-  "target": {
-    "namespace": "android_app",
-    "package_name": "com.holocard.app",
-    "sha256_cert_fingerprints": ["REPLACE_WITH_YOUR_SHA256_AFTER_KEYSTORE"]
-  }
-}]
+[{"relation":["delegate_permission/common.handle_all_urls"],"target":{"namespace":"android_app","package_name":"com.holocard.app","sha256_cert_fingerprints":["F5:BE:67:0D:77:D2:73:03:D1:76:80:DB:0E:77:AC:2F:F3:1C:33:34:70:CB:6B:9E:CC:D1:6C:84:FC:3C:4F:C0"]}}]
