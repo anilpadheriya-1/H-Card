@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+  // GitHub Pages SPA redirect trick
+  // Store the full path in sessionStorage then redirect to /
+  var path = location.pathname + location.search;
+  sessionStorage.setItem('hc_redirect', path);
+  location.replace('/');
+</script>
+</head>
+<body></body>
+</html>
