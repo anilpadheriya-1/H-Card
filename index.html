@@ -121,16 +121,20 @@
       transition:transform .1s ease;
     }
     /* rainbow foil layer — driven by JS custom props */
+    :root {
+      --foil-c1: #00E5FF;
+      --foil-c2: #D500F9;
+      --foil-c3: #2979FF;
+    }
     .holo-foil {
       position:absolute; inset:0; pointer-events:none;
       background: linear-gradient(
         calc(110deg + var(--tilt-x, 0) * 3deg),
         transparent 0%,
-        rgba(0,229,200, .55) calc(var(--band, 30%) - 14%),
-        rgba(56,189,248, .50) calc(var(--band, 30%) - 6%),
-        rgba(124,58,237,.55) calc(var(--band, 30%) + 2%),
-        rgba(236,72,153,.40) calc(var(--band, 30%) + 10%),
-        rgba(255,200,60, .30) calc(var(--band, 30%) + 18%),
+        color-mix(in srgb, var(--foil-c1) 55%, transparent) calc(var(--band, 30%) - 14%),
+        color-mix(in srgb, var(--foil-c2) 50%, transparent) calc(var(--band, 30%) - 4%),
+        color-mix(in srgb, var(--foil-c3) 55%, transparent) calc(var(--band, 30%) + 6%),
+        color-mix(in srgb, var(--foil-c1) 35%, transparent) calc(var(--band, 30%) + 16%),
         transparent calc(var(--band, 30%) + 30%)
       );
       mix-blend-mode: screen;
@@ -569,6 +573,9 @@ function renderCard(c) {
     document.getElementById('social-section').style.display = '';
   }
 
+  // Apply theme colours
+  applyThemeToCard(c);
+
   // Gyro tilt on the card
   initTilt();
 }
@@ -687,6 +694,63 @@ function copyLink() {
   navigator.clipboard?.writeText(url).then(() => alert('Link copied!')).catch(() => {
     prompt('Copy this link:', url);
   });
+}
+
+// ── Theme colors for web preview ─────────────────────────────────────────
+const THEMES = {
+  'holographic':       ['#00E5FF','#D500F9','#2979FF'],
+  'rose gold':         ['#F4978E','#FFDAB9','#E5989B'],
+  'plum copper':       ['#5C2C42','#E07A5F','#3D405B'],
+  'classic gold':      ['#D4AF37','#F3E5AB','#AA771C'],
+  'crimson rose':      ['#E63946','#A8DADC','#1D3557'],
+  'obsidian':          ['#00FFCC','#FF007F','#7B2CBF'],
+  'obsidian neon':     ['#00FFCC','#FF007F','#7B2CBF'],
+  'emerald gold':      ['#06D6A0','#FFD166','#0466C8'],
+  'electric slate':    ['#6C63FF','#3ECFCF','#232946'],
+  'bronze navy':       ['#003566','#CD8B3B','#FCBF49'],
+  'ocean turquoise':   ['#00B4D8','#90E0EF','#0077B6'],
+  'sunrise':           ['#FFB703','#FB8500','#E63946'],
+  'sunrise gold':      ['#FFB703','#FB8500','#E63946'],
+  'amber caution':     ['#FFB703','#FB8500','#023047'],
+  'cyberpunk neon':    ['#FF0080','#FFE600','#7B00D4'],
+  'amethyst lavender': ['#9B5DE5','#F15BB5','#6A0572'],
+  'sunset glow':       ['#FF6B6B','#FFE66D','#FF8E53'],
+  'aether silver':     ['#CAF0F8','#90E0EF','#48CAE4'],
+  'ruby red':          ['#BE0000','#FF6B6B','#FFD700'],
+  'cosmic':            ['#7209B7','#560BAD','#B5179E'],
+  'cosmic nebula':     ['#7209B7','#560BAD','#B5179E'],
+  'mint fresh':        ['#52B788','#74C69D','#B7E4C7'],
+  'midnight sapphire': ['#03045E','#0077B6','#00B4D8'],
+};
+
+function getThemeColors(themeName) {
+  const key = (themeName || '').toLowerCase().trim();
+  return THEMES[key] || THEMES['holographic'];
+}
+
+function applyThemeToCard(card) {
+  const [c1, c2, c3] = getThemeColors(card.theme_name);
+  const foil = document.getElementById('holo-foil');
+  const ambient = document.querySelector('.holo-ambient');
+  const colorbar = document.querySelector('.holo-colorbar');
+  if (foil) {
+    foil.style.setProperty('--foil-c1', c1);
+    foil.style.setProperty('--foil-c2', c2);
+    foil.style.setProperty('--foil-c3', c3);
+  }
+  if (ambient) {
+    ambient.style.background = `linear-gradient(115deg, ${c1}12 0%, ${c2}0a 40%, ${c3}12 100%)`;
+  }
+  if (colorbar) {
+    const bars = colorbar.querySelectorAll('div');
+    if (bars[0]) bars[0].style.background = c1;
+    if (bars[1]) bars[1].style.background = c2;
+    if (bars[2]) bars[2].style.background = c3;
+  }
+  // Update foil gradient colors
+  document.documentElement.style.setProperty('--foil-c1', c1);
+  document.documentElement.style.setProperty('--foil-c2', c2);
+  document.documentElement.style.setProperty('--foil-c3', c3);
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────
